@@ -3,7 +3,7 @@ using X.Domain.Enums;
 
 namespace X.Domain.Entities;
 
-public class UserEntity(Guid id, string username, string email, string passwordHash, DateTime createdAt, bool isVerified, UserStatusEnum statusId, string firstName, string lastName, string? profilePictureUrl)
+public class User(Guid id, string username, string email, string passwordHash, DateTime createdAt, bool isVerified, UserStatusEnum statusId, string firstName, string lastName, string? profilePictureUrl)
 {
     public Guid Id { get; set; } = id;
     public string Username { get; set; } = username;

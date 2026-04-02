@@ -1,4 +1,4 @@
-using DomainUser = X.Domain.Entities.UserEntity;
+using DomainUser = X.Domain.Entities.User;
 using UserStatus = X.Domain.Enums.UserStatusEnum;
 using PersistenceUser = X.Infrastructure.Persistence.User;
 

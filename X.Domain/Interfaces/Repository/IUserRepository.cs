@@ -1,10 +1,10 @@
 using System;
-using X.Domain.Entities;
+using UserDomain = X.Domain.Entities.User;
 
 namespace X.Domain.Interfaces.Repository;
 
 public interface IUserRepository
 {
-    public Task<UserEntity> GetUserByIdAsync(Guid id);
-    public Task<UserEntity> CreateUserAsync(UserEntity user);
+    public Task<UserDomain> GetUserByIdAsync(Guid id);
+    public Task<UserDomain> CreateUserAsync(UserDomain user);
 }

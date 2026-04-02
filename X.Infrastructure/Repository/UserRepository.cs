@@ -1,6 +1,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
-using X.Domain.Entities;
+using UserDomain = X.Domain.Entities.User;
 using X.Domain.Interfaces.Repository;
 using X.Infrastructure.Database.SqlServer.Context;
 using X.Infrastructure.Persistence;
@@ -9,7 +9,7 @@ namespace X.Infrastructure.Repository;
 
 public class UserRepository(XDbContext context) : IUserRepository
 {
-    public async Task<UserEntity> GetUserByIdAsync(Guid id)
+    public async Task<UserDomain> GetUserByIdAsync(Guid id)
     {
         var user = await context.Users.FindAsync(id);
         if(user == null)
@@ -19,7 +19,7 @@ public class UserRepository(XDbContext context) : IUserRepository
         return UserMapper.ToEntity(user);
     }
 
-    public async Task<UserEntity> CreateUserAsync(UserEntity user)
+    public async Task<UserDomain> CreateUserAsync(UserDomain user)
     {
         var userMapped = new User
         {

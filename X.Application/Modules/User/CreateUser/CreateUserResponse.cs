@@ -1,4 +1,4 @@
-namespace X.Application.DTOs.Response;
+namespace X.Application.Modules.User.CreateUser;
 
 public class CreateUserResponse(Guid id, string username, string email, string firstName, string lastName, string? profilePictureUrl)
 {

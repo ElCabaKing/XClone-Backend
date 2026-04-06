@@ -1,4 +1,4 @@
-namespace X.Application.DTOs.Command;
+namespace X.Application.Modules.User.CreateUser;
 public class CreateUserCommand(string username, string email, string password, string firstName, string lastName, Stream? profilePicture = null, string? profilePictureFileName = null, string? profilePictureContentType = null)
 {
     public string Username { get; set; } = username;

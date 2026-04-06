@@ -11,4 +11,8 @@
     <ProjectReference Include="../X.Shared/X.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.5" />
+  </ItemGroup>
+
 </Project>

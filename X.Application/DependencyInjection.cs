@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using X.Application.Modules.Auth.LogIn;
 using X.Application.Modules.User.CreateUser;
 
 
@@ -10,6 +11,7 @@ public static class DependencyInjection
     {
         // UseCases
         services.AddScoped<CreateUserHandler>();
+        services.AddScoped<UserLogInHandler>();
 
         return services;
     }

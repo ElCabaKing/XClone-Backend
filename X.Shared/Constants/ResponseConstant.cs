@@ -12,5 +12,9 @@ namespace X.Shared.Constants
 		{
 			return $"Ha ocurrido un error inesperado: Contacto con soporte, mencionando el siguiente código de error: {traceId}";
 		}
+
+		public const string LOGIN_ERROR = "Correo o contraseña incorrectos";
+
+		public const string USER_NOT_FOUND = "Usuario no encontrado";
 	}
 }

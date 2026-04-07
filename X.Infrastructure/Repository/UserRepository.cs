@@ -1,9 +1,11 @@
-using System;
+
 using Microsoft.EntityFrameworkCore;
 using UserDomain = X.Domain.Entities.User;
 using X.Domain.Interfaces.Repository;
 using X.Infrastructure.Database.SqlServer.Context;
 using X.Infrastructure.Persistence;
+using X.Domain.Exceptions;
+using X.Shared.Constants;
 
 namespace X.Infrastructure.Repository;
 
@@ -14,7 +16,7 @@ public class UserRepository(XDbContext context) : IUserRepository
         var user = await context.Users.FindAsync(id);
         if(user == null)
         {
-            throw new Exception("User not found");
+            throw new NotFoundException(ResponseConstants.USER_NOT_FOUND);
         }
         return UserMapper.ToEntity(user);
     }
@@ -37,5 +39,15 @@ public class UserRepository(XDbContext context) : IUserRepository
         await context.SaveChangesAsync();
 
         return user;
+    }
+
+    public async Task<UserDomain> GetUserByEmailAsync(string email)
+    {
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        if(user == null)
+        {
+            throw new NotFoundException(ResponseConstants.USER_NOT_FOUND);
+        }
+        return UserMapper.ToEntity(user);
     }
 }

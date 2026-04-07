@@ -4,15 +4,20 @@ using X.Domain.Interfaces.Repository;
 using X.Infrastructure.Repository;
 using X.Infrastructure.Services;
 using CloudinaryDotNet;
+using Microsoft.Extensions.Configuration;
+using X.Infrastructure.env;
 
 namespace X.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var account = new Account(
-    "dg8an29xj","633787576718813","f-iV8nCp2WIN_K5BYfuzVjSeyf0"
+    configuration[ConfigurationConstants.CloudinaryCloudName], 
+    configuration[ConfigurationConstants.CloudinaryApiKey], 
+    configuration[ConfigurationConstants.CloudinaryApiSecret]
 );
 
         var cloudinary = new Cloudinary(account);
@@ -21,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPasswordHash, Password>();
         services.AddScoped<IStorage, ImageStorage>();
+        services.AddScoped<IToken, Jwt>();
 
         return services;
     }

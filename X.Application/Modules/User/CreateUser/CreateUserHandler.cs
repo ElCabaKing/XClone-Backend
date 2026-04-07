@@ -3,12 +3,14 @@ namespace X.Application.Modules.User.CreateUser;
 using X.Application.Interfaces;
 using X.Domain.Entities;
 using X.Domain.Interfaces.Repository;
+using X.Shared.Helpers;
+using X.Shared.Responses;
 
 public class CreateUserHandler(IUserRepository userRepository, IPasswordHash passwordHash,
 IStorage storage)
 {
 
-    public Task<int> Execute(CreateUserCommand command)
+    public async Task<GenericResponse<User>> Execute(CreateUserCommand command)
     {
         var user = new User(
             Guid.NewGuid(),
@@ -31,6 +33,6 @@ IStorage storage)
 
         var createdUser = userRepository.CreateUserAsync(user).Result;
 
-        return Task.FromResult(1);
+        return ResponseHelper.Create(createdUser);
     }
 }

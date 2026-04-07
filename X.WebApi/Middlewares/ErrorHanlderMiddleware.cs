@@ -1,18 +1,52 @@
-namespace X.WebApi.Middlewares;
-public class ErrorHandlerMiddleware(RequestDelegate next)
+using X.Shared.Helpers;
+using X.Shared.Responses;
+using X.Domain.Exceptions;
+using X.Shared.Constants;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+namespace X.WebApi.Middlewares
 {
-    public async Task InvokeAsync(HttpContext context)
-    {
-        try
-        {
-            await next(context);
-        }
-        catch (Exception ex)
-        {
-            context.Response.StatusCode = 500;
-            context.Response.ContentType = "application/json";
-            var errorResponse = new { Message = "An unexpected error occurred.", Details = ex.Message };
-            await context.Response.WriteAsJsonAsync(errorResponse);
-        }
-    }
+	public class ErrorHandlerMiddleware(ILogger<ErrorHandlerMiddleware> logger) : IMiddleware
+	{
+		public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+		{
+			try
+			{
+				await next(context);
+			}
+			catch (NotFoundException exception)
+			{
+				await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status404NotFound));
+			}
+			catch (BadRequestException exception)
+			{
+				await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status400BadRequest));
+			}
+			catch (UnsupportedContentTypeException exception)
+			{
+				await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status415UnsupportedMediaType));
+			}
+			catch (Exception exception)
+			{
+				var traceId = Guid.NewGuid();
+				var message = ResponseConstants.ERROR_UNEXPECTED(traceId.ToString());
+
+				logger.LogCritical("Se generó una excepción no controlada, con el traceId: {traceId}. Excepción: {exception}", traceId, exception);
+
+				await context.Response.WriteAsJsonAsync(ManageException(context, exception, StatusCodes.Status500InternalServerError, message));
+			}
+		}
+
+		public GenericResponse<string> ManageException(HttpContext context, Exception exception, int statusCode, string? message = null)
+		{
+			var response = ResponseHelper.Create(
+				data: message ?? exception.Message,
+				message: message ?? exception.Message,
+				errors: [message ?? exception.Message]
+				);
+
+			context.Response.StatusCode = statusCode;
+			return response;
+		}
+	}
 }

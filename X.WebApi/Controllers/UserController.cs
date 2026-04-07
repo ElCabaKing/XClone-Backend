@@ -20,7 +20,6 @@ namespace X.WebApi.Controllers
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> CreateUser([FromForm] CreateUserRequestDTO createUserDTO)
         {
-            Console.WriteLine($"Received CreateUserRequestDTO: Username={createUserDTO.Username}, Email={createUserDTO.Email}, FirstName={createUserDTO.FirstName}, LastName={createUserDTO.LastName}");
             var createUserCommand = new CreateUserCommand(
                 createUserDTO.Username,
                 createUserDTO.Email,

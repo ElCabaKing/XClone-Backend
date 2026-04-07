@@ -5,6 +5,7 @@ using X.WebApi.Middlewares;
 using Serilog;
 using X.WebApi;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 Env.Load(".env");

@@ -7,6 +7,8 @@ using X.Infrastructure.Database.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using X.Infrastructure.env;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 namespace X.WebApi;
 
 public static class DependencyInjection
@@ -18,6 +20,8 @@ public static class DependencyInjection
         services.AddControllers();
 
         services.AddScoped<ErrorHandlerMiddleware>();
+
+        services.Configure<JwtOptions>(configuration.GetSection("JWT"));
 
         ConfigureJwt(services, configuration);
 
@@ -33,7 +37,8 @@ public static class DependencyInjection
         Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()
     .WriteTo.Console()
-    .WriteTo.MongoDB(configuration.GetConnectionString("MongoDbConnection")!, collectionName: "Logs")
+    .WriteTo.MongoDB(configuration[ConfigurationConstants.MongoConnectionString]??
+    throw new InvalidOperationException("MongoDB Connection String is not configured."), collectionName: "Logs")
     .CreateLogger();
     }
 
@@ -41,14 +46,13 @@ public static class DependencyInjection
     {
         services.AddDbContext<XDbContext>(options =>
     options.UseSqlServer(
-        configuration.GetConnectionString("DefaultConnection")
+        configuration[ConfigurationConstants.ConnectionString] ?? throw new InvalidOperationException("SQL Server Connection String is not configured.")
     ));
     }
 private static void ConfigureJwt(
     IServiceCollection services,
     IConfiguration configuration)
-{
-
+    {
     var key = configuration[ConfigurationConstants.JwtKey]
     ?? throw new InvalidOperationException("JWT Key is not configured.");
     var issuer = configuration[ConfigurationConstants.JwtIssuer]

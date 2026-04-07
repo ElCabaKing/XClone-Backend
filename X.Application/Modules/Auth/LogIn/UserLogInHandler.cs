@@ -1,12 +1,14 @@
 using X.Application.Interfaces;
 using X.Domain.Interfaces.Repository;
+using X.Shared.Helpers;
+using X.Shared.Responses;
 
 namespace X.Application.Modules.Auth.LogIn;
 public class UserLogInHandler(IToken tokenService, 
 IPasswordHash passwordHash,
 IUserRepository userRepository)
 {
-    public async Task<string> Execute(UserLogInCommand command)
+    public async Task<GenericResponse<string>> Execute(UserLogInCommand command)
     {
         var user = await userRepository.GetUserByEmailAsync(command.Email);
         if (user == null)
@@ -19,7 +21,7 @@ IUserRepository userRepository)
             throw new Exception("Invalid password");
         }
 
-        var token = tokenService.GenerateToken(user.Id.ToString(), user.Email);
-        return token;
+        var token = tokenService.GenerateToken(user.Id.ToString());
+        return ResponseHelper.Create(token);
     }
 }

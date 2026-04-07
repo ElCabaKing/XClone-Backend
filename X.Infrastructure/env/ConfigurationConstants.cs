@@ -9,4 +9,6 @@ public static class ConfigurationConstants
     public const string JwtIssuer = "JWT:Issuer";
     public const string JwtAudience = "JWT:Audience";
     public const string JwtExpireMinutes = "JWT:ExpireMinutes";
+    public const string MongoConnectionString = "MongoDb:ConnectionString";
+    public const string ConnectionString = "DefaultConnection";
 }

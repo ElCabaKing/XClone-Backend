@@ -27,7 +27,10 @@ IStorage storage)
 
         if (command.ProfilePicture != null)
         {
-            var profilePictureUrl = storage.UploadFileAsync(command.ProfilePicture, command.ProfilePictureFileName ?? $"{user.Id}_profile_picture", command.ProfilePictureContentType ?? "image/jpeg").Result;
+            var profilePictureUrl = storage.UploadFileAsync(
+                command.ProfilePicture, 
+                command.ProfilePictureFileName ?? $"{user.Id}_profile_picture", 
+                command.ProfilePictureContentType ?? "image/jpeg").Result;
             user.ProfilePictureUrl = profilePictureUrl;
         }
 

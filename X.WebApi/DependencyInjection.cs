@@ -5,10 +5,7 @@ using X.WebApi.Middlewares;
 using Serilog;
 using X.Infrastructure.Database.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using X.Infrastructure.env;
-using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 namespace X.WebApi;
 
 public static class DependencyInjection

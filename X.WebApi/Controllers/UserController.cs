@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using X.Application.Modules.Auth.LogIn;
 using X.Application.Modules.User.CreateUser;
 using X.WebApi.DTOs.Request;
 
@@ -8,16 +7,15 @@ namespace X.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly CreateUserHandler _createUserHandler;
-        private readonly UserLogInHandler _logInHandler;
+    
 
-        public UserController(CreateUserHandler createUserHandler,
-         UserLogInHandler logInHandler)
+        public UserController(CreateUserHandler createUserHandler)
         {
             _createUserHandler = createUserHandler;
-            _logInHandler = logInHandler;
         }
 
         [HttpPost("create")]
@@ -39,16 +37,6 @@ namespace X.WebApi.Controllers
             return Ok(new { message = "User created successfully", result });
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> LogIn([FromBody] UserLogInRequestDTO logInDTO)
-        {
-            var logInCommand = new UserLogInCommand(
-                logInDTO.Email,
-                logInDTO.Password
-            );
-
-            var token = await _logInHandler.Execute(logInCommand);
-            return Ok(new { token });
-        }
+        
     }
 }

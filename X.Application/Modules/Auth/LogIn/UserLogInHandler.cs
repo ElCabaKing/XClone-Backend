@@ -13,12 +13,12 @@ IUserRepository userRepository)
         var user = await userRepository.GetUserByEmailAsync(command.Email);
         if (user == null)
         {
-            throw new Exception("User not found");
+            throw new Exception("User or password is incorrect");
         }
 
         if (!passwordHash.VerifyPassword(command.Password, user.PasswordHash))
         {
-            throw new Exception("Invalid password");
+            throw new Exception("User or password is incorrect");
         }
 
         var token = tokenService.GenerateToken(user.Id.ToString());

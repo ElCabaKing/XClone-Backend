@@ -12,18 +12,7 @@ IStorage storage)
 
     public async Task<GenericResponse<User>> Execute(CreateUserCommand command)
     {
-        var user = new User(
-            Guid.NewGuid(),
-            command.Username,
-            command.Email,
-            passwordHash.HashPassword(command.Password),
-            DateTime.UtcNow,
-            false,
-            Domain.Enums.UserStatusEnum.active,
-            command.FirstName,
-            command.LastName,
-            null
-        );
+        var user =  CreateUser(command);
 
         if (command.ProfilePicture != null)
         {
@@ -37,5 +26,21 @@ IStorage storage)
         var createdUser = userRepository.CreateUserAsync(user).Result;
 
         return ResponseHelper.Create(createdUser);
+    }
+
+    private User CreateUser(CreateUserCommand command)
+    {
+        return new User(
+            Guid.NewGuid(),
+            command.Username,
+            command.Email,
+            passwordHash.HashPassword(command.Password),
+            DateTime.UtcNow,
+            false,
+            Domain.Enums.UserStatusEnum.active,
+            command.FirstName,
+            command.LastName,
+            null
+        );
     }
 }

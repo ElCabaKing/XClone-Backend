@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+
 using Microsoft.AspNetCore.Mvc;
 using X.Application.Modules.Auth.LogIn;
 using X.WebApi.DTOs.Request;
@@ -20,9 +20,7 @@ namespace X.WebApi.Controllers
                 logInDTO.Email,
                 logInDTO.Password
             );
-
-            var token = await _logInHandler.Execute(logInCommand);
-            return Ok(new { token });
+            return Ok(await _logInHandler.Execute(logInCommand));
         }
     }
 }

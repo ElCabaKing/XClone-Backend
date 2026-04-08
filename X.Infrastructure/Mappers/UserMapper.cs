@@ -2,6 +2,7 @@ using DomainUser = X.Domain.Entities.User;
 using UserStatus = X.Domain.Enums.UserStatusEnum;
 using PersistenceUser = X.Infrastructure.Persistence.User;
 
+namespace X.Infrastructure.Mappers;
 public class UserMapper
 {
     public static DomainUser ToEntity(PersistenceUser user)

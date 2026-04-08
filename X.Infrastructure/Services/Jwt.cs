@@ -10,9 +10,9 @@ namespace X.Infrastructure.Services;
 
 public class Jwt : IToken
 {
-    private readonly JwtOptions _jwtOptions;
+    private readonly TokenConfiguration _jwtOptions;
 
-    public Jwt(IOptions<JwtOptions> jwtOptions)
+    public Jwt(IOptions<TokenConfiguration> jwtOptions)
     {
         _jwtOptions = jwtOptions.Value;
     }
@@ -28,14 +28,13 @@ public class Jwt : IToken
             {
                 new Claim(ClaimTypes.NameIdentifier, userId)
             }),
-            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.ExpireMinutes),
+            Expires = DateTime.UtcNow.AddMinutes(_jwtOptions.Expiration.Minute),
             Issuer = _jwtOptions.Issuer,
             Audience = _jwtOptions.Audience,
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
         };
-
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }

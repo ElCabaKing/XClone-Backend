@@ -19,6 +19,7 @@ public class CreateUserRequestDTO
     [Required(ErrorMessage = ValidationConstants.REQUIRED)]
     [MaxLength(100, ErrorMessage = ValidationConstants.MAX_LENGTH)]
     public string FirstName { get; set; } = default!;
+    
     [Required(ErrorMessage = ValidationConstants.REQUIRED)]
     [MaxLength(100, ErrorMessage = ValidationConstants.MAX_LENGTH)]
     public string LastName { get; set; } = default!;

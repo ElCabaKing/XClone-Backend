@@ -1,4 +1,5 @@
 using X.Application.Interfaces;
+using X.Domain.Exceptions;
 using X.Domain.Interfaces.Repository;
 using X.Shared.Helpers;
 using X.Shared.Responses;
@@ -8,20 +9,21 @@ public class UserLogInHandler(IToken tokenService,
 IPasswordHash passwordHash,
 IUserRepository userRepository)
 {
-    public async Task<GenericResponse<string>> Execute(UserLogInCommand command)
+    public async Task<GenericResponse<UserLogInResponse>> Execute(UserLogInCommand command)
     {
         var user = await userRepository.GetUserByEmailAsync(command.Email);
         if (user == null)
         {
-            throw new Exception("User or password is incorrect");
+            throw new BadRequestException("User or password is incorrect");
         }
 
         if (!passwordHash.VerifyPassword(command.Password, user.PasswordHash))
         {
-            throw new Exception("User or password is incorrect");
+            throw new BadRequestException("User or password is incorrect");
         }
-
-        var token = tokenService.GenerateToken(user.Id.ToString());
-        return ResponseHelper.Create(token);
+        return ResponseHelper.Create(new UserLogInResponse(
+            tokenService.GenerateToken(user.Id.ToString()),
+            tokenService.GenerateToken(user.Id.ToString())
+        ));;
     }
 }

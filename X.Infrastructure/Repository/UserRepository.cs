@@ -3,9 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using UserDomain = X.Domain.Entities.User;
 using X.Domain.Interfaces.Repository;
 using X.Infrastructure.Database.SqlServer.Context;
-using X.Infrastructure.Persistence;
+using UserDb = X.Infrastructure.Persistence.User;
 using X.Domain.Exceptions;
 using X.Shared.Constants;
+using X.Infrastructure.Mappers;
 
 namespace X.Infrastructure.Repository;
 
@@ -23,7 +24,7 @@ public class UserRepository(XDbContext context) : IUserRepository
 
     public async Task<UserDomain> CreateUserAsync(UserDomain user)
     {
-        var userMapped = new User
+        var userMapped = new UserDb
         {
             Username = user.Username,
             Email = user.Email,

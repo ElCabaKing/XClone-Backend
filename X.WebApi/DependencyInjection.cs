@@ -18,7 +18,7 @@ public static class DependencyInjection
 
         services.AddScoped<ErrorHandlerMiddleware>();
 
-        services.Configure<JwtOptions>(configuration.GetSection("JWT"));
+        services.Configure<TokenConfiguration>(configuration.GetSection("JWT"));
 
         ConfigureJwt(services, configuration);
 

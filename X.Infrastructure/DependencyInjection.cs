@@ -14,6 +14,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
+        AddCache(services);
+        
         var account = new Account(
     configuration[ConfigurationConstants.CloudinaryCloudName], 
     configuration[ConfigurationConstants.CloudinaryApiKey], 
@@ -29,5 +31,11 @@ public static class DependencyInjection
         services.AddScoped<IToken, Jwt>();
 
         return services;
+    }
+
+    public static void AddCache(this IServiceCollection services)
+    {
+        services.AddMemoryCache();
+        services.AddScoped<ICacheService, CacheService>();
     }
 }

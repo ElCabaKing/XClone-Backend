@@ -7,16 +7,11 @@ namespace X.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
-    public class UserController : ControllerBase
+    public class UserController (
+        CreateUserHandler createUserHandler
+        ): ControllerBase
     {
-        private readonly CreateUserHandler _createUserHandler;
-    
-
-        public UserController(CreateUserHandler createUserHandler)
-        {
-            _createUserHandler = createUserHandler;
-        }
+        private readonly CreateUserHandler _createUserHandler = createUserHandler;
 
         [HttpPost("create")]
         [Consumes("multipart/form-data")]
@@ -32,9 +27,7 @@ namespace X.WebApi.Controllers
                 createUserDTO.ProfilePicture?.FileName,
                 createUserDTO.ProfilePicture?.ContentType
             );
-
-            var result = await _createUserHandler.Execute(createUserCommand);
-            return Ok(new { message = "User created successfully", result });
+            return Ok(await _createUserHandler.Execute(createUserCommand));
         }
 
         

@@ -5,17 +5,15 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using X.Infrastructure.env;
+using X.Shared.Helpers;
+using X.Infrastructure.Helpers;
+using X.Application.Models;
 
 namespace X.Infrastructure.Services;
 
-public class Jwt : IToken
+public class Jwt(IOptions<TokenConfiguration> jwtOptions) : IToken
 {
-    private readonly TokenConfiguration _jwtOptions;
-
-    public Jwt(IOptions<TokenConfiguration> jwtOptions)
-    {
-        _jwtOptions = jwtOptions.Value;
-    }
+    private readonly TokenConfiguration _jwtOptions = jwtOptions.Value;
 
     public string GenerateToken(string userId)
     {
@@ -38,4 +36,19 @@ public class Jwt : IToken
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
+    
+    public string CreateRefresh(Guid collaboratorId, ICacheService cacheService)
+    {
+        var token = RnText.GenerateRandomText(100);
+        var cacheKey = CacheHelper.AuthRefreshTokenCreation(token, jwtOptions);
+
+        cacheService.Create(cacheKey.Key, cacheKey.Expiration, new RefreshToken   
+        {
+            CollaboratorId = collaboratorId,
+            ExpirationInDays = cacheKey.Expiration
+        });
+
+        return token;
+    }
+
 }

@@ -20,7 +20,6 @@ public static class DependencyInjection
 
         services.Configure<TokenConfiguration>(configuration.GetSection("JWT"));
 
-        ConfigureJwt(services, configuration);
 
         ConfigureLogger(services, configuration);
 
@@ -46,40 +45,5 @@ public static class DependencyInjection
         configuration[ConfigurationConstants.ConnectionString] ?? throw new InvalidOperationException("SQL Server Connection String is not configured.")
     ));
     }
-private static void ConfigureJwt(
-    IServiceCollection services,
-    IConfiguration configuration)
-    {
-    var key = configuration[ConfigurationConstants.JwtKey]
-    ?? throw new InvalidOperationException("JWT Key is not configured.");
-    var issuer = configuration[ConfigurationConstants.JwtIssuer]
-    ?? throw new InvalidOperationException("JWT Issuer is not configured.");
-    var audience = configuration[ConfigurationConstants.JwtAudience]
-    ?? throw new InvalidOperationException("JWT Audience is not configured.");
-    var expireMinutes = int.Parse(configuration[ConfigurationConstants.JwtExpireMinutes]
-    ?? throw new InvalidOperationException("JWT Expire Minutes is not configured."));
 
-    services
-    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters =
-        new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-
-            ValidIssuer = issuer,
-            ValidAudience = audience,
-
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(key!)
-            )
-        };
-    });
-
-    services.AddAuthorization();
-}
 }

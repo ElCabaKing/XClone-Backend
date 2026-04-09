@@ -5,7 +5,7 @@ using X.WebApi.Middlewares;
 using Serilog;
 using X.WebApi;
 using DotNetEnv;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Scalar.AspNetCore;
 
 
 Env.Load(".env");
@@ -28,6 +28,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseHttpsRedirection();
